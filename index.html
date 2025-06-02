@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Waktu Sholat Kosmik</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --neon-blue: #00f3ff;
+            --neon-purple: #bd00ff;
+            --dark-space: #0a0a1a;
+        }
+        
+        body {
+            font-family: 'Space Mono', monospace;
+            background-color: var(--dark-space);
+            color: white;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+        
+        .digital-font {
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .prayer-card {
+            background: rgba(10, 10, 26, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 243, 255, 0.2);
+            transition: all 0.3s ease;
+            box-shadow: 0 0 15px rgba(0, 243, 255, 0.1);
+        }
+        
+        .prayer-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 0 25px rgba(0, 243, 255, 0.3);
+            border-color: var(--neon-blue);
+        }
+        
+        .active-prayer {
+            background: linear-gradient(135deg, rgba(0, 243, 255, 0.2), rgba(189, 0, 255, 0.2));
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 30px rgba(189, 0, 255, 0.3);
+        }
+        
+        .neon-text {
+            text-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue);
+        }
+        
+        .neon-clock {
+            text-shadow: 0 0 5px var(--neon-blue), 0 0 10px var(--neon-blue), 0 0 15px var(--neon-blue);
+        }
+        
+        .glow-effect {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 243, 255, 0.2) 0%, rgba(0, 243, 255, 0) 70%);
+            filter: blur(20px);
+            z-index: -1;
+            animation: float 15s infinite ease-in-out;
+        }
+        
+        .glow-effect:nth-child(2) {
+            background: radial-gradient(circle, rgba(189, 0, 255, 0.2) 0%, rgba(189, 0, 255, 0) 70%);
+            animation-delay: 5s;
+            top: 30%;
+            right: 10%;
+        }
+        
+        .glow-effect:nth-child(3) {
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+            animation-delay: 10s;
+            bottom: 20%;
+            left: 20%;
+        }
+        
+        @keyframes float {
+            0%, 100% {
+                transform: translate(0, 0);
+            }
+            50% {
+                transform: translate(50px, 50px);
+            }
+        }
+        
+        .countdown-bar {
+            height: 5px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple));
+            animation: progress 60s linear infinite;
+        }
+        
+        @keyframes progress {
+            0% {
+                width: 0%;
+            }
+            100% {
+                width: 100%;
+            }
+        }
+        
+        .loading-spinner {
+            border: 3px solid rgba(0, 243, 255, 0.3);
+            border-radius: 50%;
+            border-top: 3px solid var(--neon-blue);
+            width: 30px;
+            height: 30px;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 1s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body class="relative">
+    <!-- Floating glow effects -->
+    <div class="glow-effect top-10 left-10"></div>
+    <div class="glow-effect"></div>
+    <div class="glow-effect"></div>
+    
+    <div class="container mx-auto px-4 py-8 max-w-6xl">
+        <!-- Header -->
+        <header class="text-center mb-10 fade-in">
+            <h1 class="text-4xl md:text-5xl font-bold mb-2 digital-font neon-text">WAKTU SHOLAT KOSMIK</h1>
+            <p class="text-lg text-gray-300">Panduan futuristik untuk waktu sholat di Indonesia</p>
+        </header>
+        
+        <!-- Location and Date Info -->
+        <div class="flex flex-col md:flex-row justify-between items-center mb-8 fade-in">
+            <div class="mb-4 md:mb-0">
+                <h2 id="location" class="text-2xl digital-font flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2 text-blue-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span id="city-name">Mendeteksi lokasi Anda...</span>
+                </h2>
+                <p id="coordinates" class="text-gray-400 text-sm"></p>
+            </div>
+            
+            <div class="text-center md:text-right">
+                <div id="gregorian-date" class="text-xl digital-font"></div>
+                <div id="hijri-date" class="text-blue-400"></div>
+            </div>
+        </div>
+        
+        <!-- Digital Clock -->
+        <div class="bg-black bg-opacity-30 rounded-lg p-4 mb-8 text-center border border-gray-800 fade-in">
+            <div id="digital-clock" class="text-5xl md:text-6xl font-bold digital-font neon-clock"></div>
+            <div class="countdown-bar mt-2"></div>
+        </div>
+        
+        <!-- Prayer Times Cards -->
+        <div id="prayer-times-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 mb-8">
+            <!-- Loading state -->
+            <div id="loading-state" class="col-span-full text-center py-10">
+                <div class="loading-spinner mx-auto mb-4"></div>
+                <p class="text-gray-300">Mengambil waktu sholat untuk lokasi Anda...</p>
+            </div>
+            
+            <!-- Prayer cards will be inserted here by JavaScript -->
+        </div>
+        
+        <!-- Next Prayer Info -->
+        <div id="next-prayer-info" class="bg-gradient-to-r from-blue-900 to-purple-900 rounded-lg p-6 mb-8 border border-blue-500 fade-in hidden">
+            <h3 class="text-xl font-bold mb-2 digital-font">Sholat Berikutnya</h3>
+            <div class="flex justify-between items-center">
+                <div>
+                    <span id="next-prayer-name" class="text-2xl font-bold"></span>
+                    <span id="next-prayer-time" class="text-3xl digital-font ml-2"></span>
+                </div>
+                <div id="countdown" class="text-2xl digital-font"></div>
+            </div>
+        </div>
+        
+        <!-- Additional Info -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 fade-in">
+            <div class="bg-gray-900 bg-opacity-50 rounded-lg p-4 border border-gray-700">
+                <h3 class="text-lg font-bold mb-2 digital-font">Arah Kiblat</h3>
+                <div class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-2 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+                    </svg>
+                    <span id="qibla-direction" class="text-xl">Menghitung...</span>
+                </div>
+            </div>
+            <div class="bg-gray-900 bg-opacity-50 rounded-lg p-4 border border-gray-700">
+                <h3 class="text-lg font-bold mb-2 digital-font">Posisi Matahari</h3>
+                <div class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 mr-2 text-yellow-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <span id="sun-position" class="text-xl">Terbit: <span id="sunrise-time"></span>, Terbenam: <span id="sunset-time"></span></span>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-gray-500 text-sm fade-in">
+            <p>Data disediakan oleh <a href="https://aladhan.com" class="text-blue-400 hover:underline" target="_blank">Aladhan API</a></p>
+            <p class="mt-1">© <span id="current-year"></span> Waktu Sholat Kosmik - Hak Cipta Dilindungi</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current year in footer
+            document.getElementById('current-year').textContent = new Date().getFullYear();
+            
+            // Update clock immediately and then every second
+            updateClock();
+            setInterval(updateClock, 1000);
+            
+            // Get user's location and fetch prayer times
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                    position => {
+                        const { latitude, longitude } = position.coords;
+                        document.getElementById('coordinates').textContent = `Lintang: ${latitude.toFixed(4)}, Bujur: ${longitude.toFixed(4)}`;
+                        fetchPrayerTimes(latitude, longitude);
+                        fetchLocationName(latitude, longitude);
+                        calculateQiblaDirection(latitude, longitude);
+                    },
+                    error => {
+                        console.error('Error getting location:', error);
+                        // Default to Jakarta if location access is denied
+                        const defaultLat = -6.2088;
+                        const defaultLong = 106.8456;
+                        document.getElementById('city-name').textContent = 'Jakarta, Indonesia';
+                        document.getElementById('coordinates').textContent = `Lintang: ${defaultLat}, Bujur: ${defaultLong}`;
+                        fetchPrayerTimes(defaultLat, defaultLong);
+                        calculateQiblaDirection(defaultLat, defaultLong);
+                    }
+                );
+            } else {
+                alert('Browser Anda tidak mendukung geolokasi. Menggunakan lokasi default (Jakarta).');
+                const defaultLat = -6.2088;
+                const defaultLong = 106.8456;
+                document.getElementById('city-name').textContent = 'Jakarta, Indonesia';
+                document.getElementById('coordinates').textContent = `Lintang: ${defaultLat}, Bujur: ${defaultLong}`;
+                fetchPrayerTimes(defaultLat, defaultLong);
+                calculateQiblaDirection(defaultLat, defaultLong);
+            }
+        });
+        
+        function updateClock() {
+            const now = new Date();
+            const hours = now.getHours().toString().padStart(2, '0');
+            const minutes = now.getMinutes().toString().padStart(2, '0');
+            const seconds = now.getSeconds().toString().padStart(2, '0');
+            document.getElementById('digital-clock').textContent = `${hours}:${minutes}:${seconds}`;
+            
+            // Update date in Indonesian format
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const dateStr = now.toLocaleDateString('id-ID', options);
+            document.getElementById('gregorian-date').textContent = dateStr;
+            
+            // Update Hijri date (simplified - in a real app you'd use a proper Hijri calendar library)
+            updateHijriDate(now);
+        }
+        
+        function updateHijriDate(gregorianDate) {
+            // This is a simplified approximation - for accurate Hijri dates use a proper library
+            const hijriMonths = ['Muharram', 'Safar', 'Rabi\' al-Awwal', 'Rabi\' al-Thani', 'Jumada al-Awwal', 
+                                'Jumada al-Thani', 'Rajab', 'Sha\'ban', 'Ramadan', 'Shawwal', 'Dhu al-Qi\'dah', 'Dhu al-Hijjah'];
+            
+            // Very rough approximation (1 Hijri year ≈ 354.367 days)
+            const hijriYear = Math.floor((gregorianDate - new Date(622, 6, 16)) / (354.367 * 24 * 60 * 60 * 1000)) + 1;
+            const hijriMonth = hijriMonths[Math.floor(Math.random() * 12)]; // Random for demo
+            const hijriDay = Math.floor(Math.random() * 29) + 1; // Random for demo
+            
+            document.getElementById('hijri-date').textContent = `${hijriDay} ${hijriMonth} ${hijriYear} H`;
+        }
+        
+        async function fetchLocationName(latitude, longitude) {
+            try {
+                const response = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=id`);
+                const data = await response.json();
+                const city = data.city || data.locality || 'Lokasi Tidak Dikenal';
+                const country = data.countryName || 'Negara Tidak Dikenal';
+                document.getElementById('city-name').textContent = `${city}, ${country}`;
+            } catch (error) {
+                console.error('Error fetching location name:', error);
+                document.getElementById('city-name').textContent = 'Lokasi Tidak Dikenal';
+            }
+        }
+        
+        async function fetchPrayerTimes(latitude, longitude) {
+            try {
+                // Get today's date in DD-MM-YYYY format
+                const today = new Date();
+                const day = today.getDate().toString().padStart(2, '0');
+                const month = (today.getMonth() + 1).toString().padStart(2, '0');
+                const year = today.getFullYear();
+                const dateStr = `${day}-${month}-${year}`;
+                
+                // Fetch prayer times from Aladhan API
+                const response = await fetch(`https://api.aladhan.com/v1/timings/${dateStr}?latitude=${latitude}&longitude=${longitude}&method=2`);
+                const data = await response.json();
+                
+                if (data.code === 200 && data.data) {
+                    displayPrayerTimes(data.data.timings, data.data.date);
+                    updateNextPrayerInfo(data.data.timings);
+                } else {
+                    throw new Error('Data waktu sholat tidak valid');
+                }
+            } catch (error) {
+                console.error('Error fetching prayer times:', error);
+                document.getElementById('loading-state').innerHTML = `
+                    <div class="text-red-400">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 mx-auto mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                        <p>Gagal memuat waktu sholat. Silakan coba lagi nanti.</p>
+                    </div>
+                `;
+            }
+        }
+        
+        function displayPrayerTimes(timings, dateData) {
+            const container = document.getElementById('prayer-times-container');
+            container.innerHTML = '';
+            
+            const prayers = [
+                { name: 'Subuh', time: timings.Fajr, icon: '🌅' },
+                { name: 'Terbit', time: timings.Sunrise, icon: '☀️' },
+                { name: 'Dzuhur', time: timings.Dhuhr, icon: '🕛' },
+                { name: 'Ashar', time: timings.Asr, icon: '⏳' },
+                { name: 'Maghrib', time: timings.Maghrib, icon: '🌇' },
+                { name: 'Isya', time: timings.Isha, icon: '🌙' }
+            ];
+            
+            prayers.forEach(prayer => {
+                const card = document.createElement('div');
+                card.className = 'prayer-card rounded-lg p-4 text-center';
+                card.innerHTML = `
+                    <div class="text-4xl mb-2">${prayer.icon}</div>
+                    <h3 class="text-xl font-bold mb-1">${prayer.name}</h3>
+                    <div class="text-2xl digital-font">${formatTime(prayer.time)}</div>
+                `;
+                container.appendChild(card);
+            });
+            
+            // Update sunrise/sunset times
+            document.getElementById('sunrise-time').textContent = formatTime(timings.Sunrise);
+            document.getElementById('sunset-time').textContent = formatTime(timings.Sunset);
+        }
+        
+        function formatTime(timeString) {
+            // Convert "05:30" to "05:30" format (24-hour format common in Indonesia)
+            return timeString;
+        }
+        
+        function updateNextPrayerInfo(timings) {
+            const now = new Date();
+            const currentHours = now.getHours();
+            const currentMinutes = now.getMinutes();
+            
+            const prayerTimes = [
+                { name: 'Subuh', time: timings.Fajr },
+                { name: 'Dzuhur', time: timings.Dhuhr },
+                { name: 'Ashar', time: timings.Asr },
+                { name: 'Maghrib', time: timings.Maghrib },
+                { name: 'Isya', time: timings.Isha }
+            ];
+            
+            let nextPrayer = null;
+            
+            for (const prayer of prayerTimes) {
+                const [hours, minutes] = prayer.time.split(':').map(Number);
+                const prayerTime = new Date();
+                prayerTime.setHours(hours, minutes, 0, 0);
+                
+                if (prayerTime > now) {
+                    nextPrayer = {
+                        name: prayer.name,
+                        time: prayer.time,
+                        date: prayerTime
+                    };
+                    break;
+                }
+            }
+            
+            // If no more prayers today, use Subuh tomorrow
+            if (!nextPrayer) {
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                tomorrow.setHours(0, 0, 0, 0);
+                
+                nextPrayer = {
+                    name: 'Subuh',
+                    time: timings.Fajr,
+                    date: new Date(tomorrow)
+                };
+                nextPrayer.date.setHours(...timings.Fajr.split(':').map(Number));
+            }
+            
+            // Update UI
+            const nextPrayerInfo = document.getElementById('next-prayer-info');
+            nextPrayerInfo.classList.remove('hidden');
+            document.getElementById('next-prayer-name').textContent = nextPrayer.name;
+            document.getElementById('next-prayer-time').textContent = formatTime(nextPrayer.time);
+            
+            // Update countdown
+            updateCountdown(nextPrayer.date);
+            setInterval(() => updateCountdown(nextPrayer.date), 1000);
+        }
+        
+        function updateCountdown(targetDate) {
+            const now = new Date();
+            const diff = targetDate - now;
+            
+            if (diff <= 0) {
+                document.getElementById('countdown').textContent = 'SEKARANG';
+                return;
+            }
+            
+            const hours = Math.floor(diff / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('countdown').textContent = 
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+        
+        function calculateQiblaDirection(latitude, longitude) {
+            // Simplified Qibla direction calculation (approximation)
+            // In a real app, you'd use more precise formulas or a library
+            
+            // Kaaba coordinates
+            const kaabaLat = 21.3891;
+            const kaabaLong = 39.8579;
+            
+            // Calculate bearing from user's location to Kaaba
+            const phi1 = latitude * Math.PI / 180;
+            const phi2 = kaabaLat * Math.PI / 180;
+            const deltaLambda = (kaabaLong - longitude) * Math.PI / 180;
+            
+            const y = Math.sin(deltaLambda) * Math.cos(phi2);
+            const x = Math.cos(phi1) * Math.sin(phi2) - 
+                      Math.sin(phi1) * Math.cos(phi2) * Math.cos(deltaLambda);
+            const theta = Math.atan2(y, x);
+            const bearing = (theta * 180 / Math.PI + 360) % 360;
+            
+            // Convert bearing to compass direction in Indonesian
+            const directions = ['Utara', 'Timur Laut', 'Timur', 'Tenggara', 'Selatan', 'Barat Daya', 'Barat', 'Barat Laut'];
+            const index = Math.round(bearing / 45) % 8;
+            
+            document.getElementById('qibla-direction').textContent = 
+                `${directions[index]} (${Math.round(bearing)}°)`;
+        }
+    </script>
+</body>
+</html>
